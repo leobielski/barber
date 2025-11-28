@@ -1,0 +1,53 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client"
+  output   = "../app/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model BarberShop {
+  id          String              @id @default(uuid())
+  name        String
+  address     String
+  description String
+  imageUrl    String
+  phones      String[]
+  createdAt   DateTime            @default(now())
+  updatedAt   DateTime            @updatedAt
+  services    BarberShopService[]
+  bookings    Booking[]
+}
+
+model BarberShopService {
+  id           String     @id @default(uuid())
+  name         String
+  description  String
+  priceInCents Int
+  imageUrl     String
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  barberShopId String
+  barberShop   BarberShop @relation(fields: [barberShopId], references: [id])
+  bookings     Booking[]
+}
+
+model Booking {
+  id           String            @id @default(uuid())
+  date         DateTime          @db.Timestamptz
+  canceled     Boolean?          @default(false)
+  canceledAt   DateTime?         @db.Timestamptz
+  barberShopId String
+  barberShop   BarberShop        @relation(fields: [barberShopId], references: [id])
+  serviceId    String
+  service      BarberShopService @relation(fields: [serviceId], references: [id])
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
+}
