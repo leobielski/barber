@@ -1,5 +1,5 @@
 // prisma/seed.ts
-import { Prisma, PrismaClient } from "@my-firm/client/test";
+import { Prisma, PrismaClient } from "../generated/client";
 import { PrismaPg } from "@prisma/adapter-pg";
 
 const adapter = new PrismaPg({
